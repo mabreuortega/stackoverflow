@@ -8,9 +8,14 @@ namespace ConsoleApp1
     {
         private readonly List<IDbContextRegistry> _registry = new List<IDbContextRegistry>();
 
-        public ContextJoin(params IDbContextRegistry[] registry)
+        // Constructor to allow automatic DI injection for most modern containers
+        public ContextJoin(IEnumerable<IDbContextRegistry> registry)
         {
             _registry.AddRange(registry);
+        }
+
+        public ContextJoin(params IDbContextRegistry[] registry) : this(_registry.AsEnumerable())
+        {
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
